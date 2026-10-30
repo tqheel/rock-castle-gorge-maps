@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="bg-stone-50 text-stone-900 min-h-screen">
-        <header className="bg-forest-800 text-white shadow-md">
+        <header className="bg-forest-800 text-white shadow-md print:hidden">
           <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
             <span className="text-2xl">⛺</span>
             <div>
@@ -19,8 +19,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </header>
-        <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>
-        <footer className="border-t border-stone-200 mt-12 py-6 text-center text-xs text-stone-400">
+        <main className="max-w-6xl mx-auto px-4 py-6 print:p-0 print:max-w-none">{children}</main>
+        <footer className="border-t border-stone-200 mt-12 py-6 text-center text-xs text-stone-400 print:hidden">
           Troop 212 · Route from OpenStreetMap trail data and SRTM elevation. Planning aid only: verify with the NPS
           and carry the official map.
         </footer>

@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import type { RouteData } from "@/lib/types";
+import { baseTileLayer, contourGroup, loadContours, type BaseLayer } from "@/lib/mapLayers";
 
-export type BaseLayer = "topo" | "street";
+export type { BaseLayer };
 
 interface Props {
   data: RouteData;
@@ -13,15 +14,7 @@ interface Props {
   contours: boolean;
 }
 
-interface ContourLevel {
-  ft: number;
-  index: boolean;
-  lines: [number, number][][];
-}
-
 type Leaflet = typeof import("leaflet");
-
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function TripMap({ data, selected, colors, base, contours }: Props) {
   const el = useRef<HTMLDivElement>(null);
@@ -30,7 +23,6 @@ export default function TripMap({ data, selected, colors, base, contours }: Prop
   const baseLayer = useRef<import("leaflet").TileLayer | null>(null);
   const routeLayer = useRef<import("leaflet").LayerGroup | null>(null);
   const contourLayer = useRef<import("leaflet").LayerGroup | null>(null);
-  const contourData = useRef<ContourLevel[] | null>(null);
   const baseRef = useRef(base);
   const contoursRef = useRef(contours);
   baseRef.current = base;
@@ -40,17 +32,7 @@ export default function TripMap({ data, selected, colors, base, contours }: Prop
     const L = L_.current, m = map.current;
     if (!L || !m) return;
     baseLayer.current?.remove();
-    baseLayer.current =
-      baseRef.current === "topo"
-        ? L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}", {
-            attribution: "Map data: <a href='https://www.usgs.gov/programs/national-geospatial-program/national-map'>USGS The National Map</a>",
-            maxNativeZoom: 16,
-            maxZoom: 18,
-          })
-        : L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "© <a href='https://openstreetmap.org'>OpenStreetMap</a> contributors",
-            maxZoom: 17,
-          });
+    baseLayer.current = baseTileLayer(L, baseRef.current);
     baseLayer.current.addTo(m).bringToBack();
   };
 
@@ -60,35 +42,9 @@ export default function TripMap({ data, selected, colors, base, contours }: Prop
     contourLayer.current?.remove();
     contourLayer.current = null;
     if (!contoursRef.current) return;
-    if (!contourData.current) {
-      const res = await fetch(`${BASE_PATH}/data/contours.json`);
-      contourData.current = (await res.json()) as ContourLevel[];
-    }
+    const levels = await loadContours();
     if (!contoursRef.current || !map.current) return;
-    const group = L.layerGroup();
-    contourData.current.forEach((lvl) => {
-      lvl.lines.forEach((line) => {
-        L.polyline(line, {
-          color: "#8b5a2b",
-          weight: lvl.index ? 1.4 : 0.7,
-          opacity: lvl.index ? 0.9 : 0.6,
-          interactive: lvl.index,
-        })
-          .bindTooltip(`${lvl.ft.toLocaleString()} ft`, { sticky: true })
-          .addTo(group);
-        if (lvl.index && line.length >= 40) {
-          const [lat, lon] = line[Math.floor(line.length / 2)];
-          L.marker([lat, lon], {
-            interactive: false,
-            icon: L.divIcon({
-              className: "",
-              html: `<span style="font:600 10px system-ui;color:#6b4423;background:rgba(255,255,255,.75);padding:0 2px;border-radius:2px;white-space:nowrap">${lvl.ft.toLocaleString()}</span>`,
-              iconSize: [0, 0],
-            }),
-          }).addTo(group);
-        }
-      });
-    });
+    const group = contourGroup(L, levels);
     group.addTo(m);
     routeLayer.current?.eachLayer((l) => (l as import("leaflet").Path).bringToFront?.());
     contourLayer.current = group;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import type { RouteData } from "@/lib/types";
 
@@ -79,6 +80,12 @@ export default function TripExplorer({ data }: { data: RouteData }) {
           <input type="checkbox" checked={contours} onChange={(e) => setContours(e.target.checked)} />
           Contour lines (40 ft, from SRTM)
         </label>
+      </div>
+
+      <div>
+        <Link href="/print/" className="inline-block text-sm text-forest-700 underline hover:text-forest-800">
+          Printable map for the Scouts →
+        </Link>
       </div>
 
       <TripMap data={data} selected={sel} colors={COLORS} base={base} contours={contours} />

@@ -6,3 +6,10 @@
   background: #e8e0d4;
   font-family: system-ui, sans-serif;
 }
+
+@media print {
+  @page { size: letter portrait; margin: 0.4in; }
+  body { background: #fff; }
+  .leaflet-control-zoom { display: none; }
+  .leaflet-container, .leaflet-container * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
