@@ -1,7 +1,10 @@
 # Rock Castle Gorge maps (Troop 212, Nov 7-8, 2026)
 
-Static trip site modeled on `philmont-maps`: route options, elevation profile, camp info and open items for the
-Rock Castle Gorge backcountry sites 5-8 (Rocky Knob, Blue Ridge Parkway, VA).
+Static trip site modeled on `philmont-maps`: route options, elevation profile, schedule and camp info for the
+Rock Castle Gorge backcountry sites 5-8 (Rocky Knob, Blue Ridge Parkway, VA). Live at
+https://tqheel.github.io/rock-castle-gorge-maps/ (deploys on every push to `master`).
+
+Pages: `/` interactive map; `/print/` printable Letter map with lettered routes and a camp reticle.
 
 ## Data
 - Trails and parking: OpenStreetMap via Overpass (c) OpenStreetMap contributors, ODbL. Saved to `data/osm_*.json` (ignored by git).
@@ -14,7 +17,7 @@ Rock Castle Gorge backcountry sites 5-8 (Rocky Knob, Blue Ridge Parkway, VA).
 ```
 python3 scripts/build_route.py          # writes web/public/data/route.json
 ~/src/github/philmont-maps/.venv/bin/python scripts/build_contours.py   # needs numpy, scipy, contourpy (any env with matplotlib); writes contours.json
-cd web && npm install && npm run dev    # http://localhost:3001
+cd web && npm install && npm run dev    # http://localhost:3001 (stop it before running a production build)
 GITHUB_PAGES=true npm run build         # static export to web/out
 ```
 
