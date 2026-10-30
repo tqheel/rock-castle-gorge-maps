@@ -1,6 +1,6 @@
 .DS_Store
 # Source data and caches; rerun scripts to recreate
-data/
+/data/
 web/node_modules/
 web/.next/
 web/out/
