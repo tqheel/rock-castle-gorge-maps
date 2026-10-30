@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,12 +12,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="bg-stone-50 text-stone-900 min-h-screen">
         <header className="bg-forest-800 text-white shadow-md print:hidden">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
-            <span className="text-2xl">⛺</span>
-            <div>
-              <div className="font-bold text-lg leading-tight">Troop 212 · Rock Castle Gorge</div>
-              <div className="text-xs text-green-200 leading-tight">Backpacking skills trip · Nov 7-8, 2026</div>
-            </div>
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+              <span className="text-2xl">⛺</span>
+              <div>
+                <div className="font-bold text-lg leading-tight">Troop 212 · Rock Castle Gorge</div>
+                <div className="text-xs text-green-200 leading-tight">Backpacking skills trip · Nov 7-8, 2026</div>
+              </div>
+            </Link>
+            <nav className="flex gap-4 text-sm">
+              <Link href="/" className="hover:text-green-200 transition-colors">Trip map</Link>
+              <Link href="/print/" className="hover:text-green-200 transition-colors">Printable map</Link>
+            </nav>
           </div>
         </header>
         <main className="max-w-6xl mx-auto px-4 py-6 print:p-0 print:max-w-none">{children}</main>

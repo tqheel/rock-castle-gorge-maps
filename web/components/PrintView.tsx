@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import type { RouteData } from "@/lib/types";
 import type { BaseLayer } from "@/lib/mapLayers";
@@ -26,6 +27,9 @@ export default function PrintView({ data }: { data: RouteData }) {
   return (
     <div className="print-page">
       <div className="print:hidden mb-4 space-y-2 max-w-[7.5in]">
+        <Link href="/" className="inline-block text-sm text-forest-700 underline hover:text-forest-800">
+          ← Back to the interactive trip map
+        </Link>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-stone-700">
           <button
             onClick={() => window.print()}
