@@ -1,0 +1,8 @@
+.DS_Store
+# Source data and caches; rerun scripts to recreate
+data/
+web/node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo

@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.leaflet-container {
+  background: #e8e0d4;
+  font-family: system-ui, sans-serif;
+}
