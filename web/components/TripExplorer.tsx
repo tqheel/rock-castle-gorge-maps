@@ -4,6 +4,8 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import type { RouteData } from "@/lib/types";
 
+import type { BaseLayer } from "./TripMap";
+
 const TripMap = dynamic(() => import("./TripMap"), {
   ssr: false,
   loading: () => <div className="w-full rounded-xl bg-stone-100 animate-pulse" style={{ height: 480 }} />,
@@ -29,6 +31,8 @@ const NOTES: Record<string, string> = {
 
 export default function TripExplorer({ data }: { data: RouteData }) {
   const [sel, setSel] = useState("entry");
+  const [base, setBase] = useState<BaseLayer>("topo");
+  const [contours, setContours] = useState(false);
   const keys = Object.keys(data.routes);
   const r = data.routes[sel];
 
@@ -63,9 +67,23 @@ export default function TripExplorer({ data }: { data: RouteData }) {
       </div>
       <p className="text-sm text-stone-600">{NOTES[sel]}</p>
 
-      <TripMap data={data} selected={sel} colors={COLORS} />
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-stone-700">
+        <span className="font-medium text-stone-500">Map</span>
+        {([["topo", "USGS Topo"], ["street", "Street"]] as const).map(([k, label]) => (
+          <label key={k} className="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" name="base" checked={base === k} onChange={() => setBase(k)} />
+            {label}
+          </label>
+        ))}
+        <label className="flex items-center gap-1.5 cursor-pointer">
+          <input type="checkbox" checked={contours} onChange={(e) => setContours(e.target.checked)} />
+          Contour lines (40 ft, from SRTM)
+        </label>
+      </div>
+
+      <TripMap data={data} selected={sel} colors={COLORS} base={base} contours={contours} />
       <p className="text-xs text-stone-400 text-center">
-        Tiles © OpenStreetMap contributors · Dashed grey line: Rock Castle Gorge Loop Trail · Blue dot: entry point · Red dot: sites 5-8
+        Basemaps: USGS The National Map, © OpenStreetMap contributors · Dashed grey line: Rock Castle Gorge Loop Trail · Blue dot: entry point · Red dot: sites 5-8
       </p>
 
       <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4">

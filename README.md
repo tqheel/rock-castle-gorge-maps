@@ -5,6 +5,7 @@ Rock Castle Gorge backcountry sites 5-8 (Rocky Knob, Blue Ridge Parkway, VA).
 
 ## Data
 - Trails and parking: OpenStreetMap via Overpass (c) OpenStreetMap contributors, ODbL. Saved to `data/osm_*.json` (ignored by git).
+- Basemaps: USGS The National Map topo tiles and OpenStreetMap tiles. Contour lines are our own: 40 ft interval from SRTM, 200 ft index lines.
 - Elevation: SRTM 1 arc-second tile N36W081 from the AWS terrain tiles (`data/N36W081.hgt.gz`, ignored by git).
 - Entry point and camp coordinates: from the Philmont Crew 618 May Training Trip (hard-coded in `scripts/build_route.py`).
   The camp coordinate is the cluster of contiguous sites 5-8, not each site.
@@ -12,6 +13,7 @@ Rock Castle Gorge backcountry sites 5-8 (Rocky Knob, Blue Ridge Parkway, VA).
 ## Build
 ```
 python3 scripts/build_route.py          # writes web/public/data/route.json
+~/src/github/philmont-maps/.venv/bin/python scripts/build_contours.py   # needs numpy, scipy, contourpy (any env with matplotlib); writes contours.json
 cd web && npm install && npm run dev    # http://localhost:3001
 GITHUB_PAGES=true npm run build         # static export to web/out
 ```
